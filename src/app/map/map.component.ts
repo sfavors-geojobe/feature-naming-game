@@ -1,14 +1,11 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChange, SimpleChanges } from "@angular/core";
 import esriConfig from "@arcgis/core/config";
 import Map from "@arcgis/core/Map.js";
 import MapView from "@arcgis/core/views/MapView.js";
 import BasemapGallery from "@arcgis/core/widgets/BasemapGallery.js";
 import CoordinateConversion from "@arcgis/core/widgets/CoordinateConversion.js";
-import BasemapToggle from "@arcgis/core/widgets/BasemapToggle.js";
 import LayerList from "@arcgis/core/widgets/LayerList.js";
 import Locate from "@arcgis/core/widgets/Locate.js";
-import Graphic from "@arcgis/core/Graphic.js";
-import Symbol from "@arcgis/core/symbols/Symbol.js";
 import FeatureLayer from "@arcgis/core/layers/FeatureLayer.js";
 import FeatureLayerView from "@arcgis/core/views/layers/FeatureLayerView.js";
 
@@ -26,9 +23,13 @@ export class MapComponent implements OnInit {
   zoom: number = 13;
   @Input()
   container: string = "viewDiv";
+  @Input()
+  highlightEvent: string = "";
 
   map: Map | undefined = undefined;
   view: MapView | undefined = undefined;
+  featureLayer: FeatureLayer | undefined = undefined;
+  // highlights: string[] = [];
 
   // @Output() mapLoad = new EventEmitter<string>()
 
@@ -49,18 +50,49 @@ export class MapComponent implements OnInit {
       container: this.container,
     });
 
-    const layer = new FeatureLayer({
-      // url: "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_Boundaries_2021/FeatureServer"
+    this.featureLayer = new FeatureLayer({
       url:
         "https://services.arcgis.com/P3ePLMYs2RVChkJx/arcgis/rest/services/USA_States_Generalized_Boundaries/FeatureServer",
       id: "states",
     });
+    this.map.add(this.featureLayer);
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    let highlightEvent = changes['highlightEvent']
+
+    if (!highlightEvent.isFirstChange()) {
+      let value = highlightEvent.currentValue
+
+      this.highlightFeature(value)
+    }
+  }
+
+  highlightFeature(featureName: string) {
+    this.featureLayer?.queryFeatures().then((results) => {
+      let result = results.features.find((feature) => {
+        return (feature.attributes.STATE_NAME as string).toLowerCase() ===
+          featureName.toLowerCase();
+      });
+
+      this.view?.when(() => {
+        if (this.featureLayer) {
+          this.view?.whenLayerView(this.featureLayer).then(
+            (lv: FeatureLayerView) => {
+              lv.highlight(result);
+            },
+          );
+        }
+      });
+    });
+  }
+
+  attachClickEvent() {
     // on click - highlight state
-    this.view.on("click", (event: any) => {
+    this.view?.on("click", (event: any) => {
       this.view?.hitTest(event).then((hitRes) => {
         const hits = hitRes.results?.filter((hit) =>
-          hit.type === "graphic" && hit.graphic.layer === layer
+          hit.type === "graphic" && hit.graphic.layer === this.featureLayer
         );
 
         if (hits?.length > 0) {
@@ -76,33 +108,5 @@ export class MapComponent implements OnInit {
         }
       });
     });
-
-    this.map.add(layer);
-    this.addWidgets();
-  }
-
-  addWidgets() {
-    const locateWidget = new Locate({
-      view: this.view,
-    });
-
-    const layerList = new LayerList({
-      view: this.view,
-    });
-
-    const ccWidget = new CoordinateConversion({
-      view: this.view,
-    });
-
-    const basemapGallery = new BasemapGallery({
-      view: this.view,
-    });
-
-    if (this.view) {
-      this.view.ui.add(locateWidget, "top-left");
-      // this.view.ui.add(layerList, "top-left");
-      this.view.ui.add(ccWidget, "bottom-left");
-      // this.view.ui.add(basemapGallery, "top-right");
-    }
   }
 }

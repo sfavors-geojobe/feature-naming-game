@@ -28,6 +28,9 @@ dependencies:
   '@arcgis/core':
     specifier: ^4.26.5
     version: 4.26.5
+  '@esri/calcite-components':
+    specifier: ^1.2.0
+    version: 1.2.0
   rxjs:
     specifier: ~7.8.0
     version: 7.8.0
@@ -1903,6 +1906,19 @@ packages:
       sortablejs: 1.15.0
     dev: false
 
+  /@esri/calcite-components@1.2.0:
+    resolution: {integrity: sha512-IAMOcnN9KxwjGVl2HqTvYEo7I18DAs4R03/jcDICumwqVI3jzzlfbTpBuLNvxLN1gMMTIHQe35Rf2tPWTOOBDA==}
+    dependencies:
+      '@floating-ui/dom': 1.2.1
+      '@stencil/core': 2.22.3
+      '@types/color': 3.0.3
+      color: 4.2.3
+      focus-trap: 7.4.0
+      form-request-submit-polyfill: 2.0.0
+      lodash-es: 4.17.21
+      sortablejs: 1.15.0
+    dev: false
+
   /@floating-ui/core@1.2.5:
     resolution: {integrity: sha512-qrcbyfnRVziRlB6IYwjCopYhO7Vud750JlJyuljruIXcPxr22y8zdckcJGsuOdnQ639uVD1tTXddrcH3t3QYIQ==}
     dev: false
@@ -2117,6 +2133,12 @@ packages:
 
   /@stencil/core@2.20.0:
     resolution: {integrity: sha512-ka+eOW+dNteXIfLCRipNbbAlBEQjqJ2fkx3fxzlKgnNHEQMdZiuIjlWt63KzvOJStNeuADdQXo89BB1dC2VRUw==}
+    engines: {node: '>=12.10.0', npm: '>=6.0.0'}
+    hasBin: true
+    dev: false
+
+  /@stencil/core@2.22.3:
+    resolution: {integrity: sha512-kmVA0M/HojwsfkeHsifvHVIYe4l5tin7J5+DLgtl8h6WWfiMClND5K3ifCXXI2ETDNKiEk21p6jql3Fx9o2rng==}
     engines: {node: '>=12.10.0', npm: '>=6.0.0'}
     hasBin: true
     dev: false
@@ -3756,6 +3778,12 @@ packages:
 
   /focus-trap@7.2.0:
     resolution: {integrity: sha512-v4wY6HDDYvzkBy4735kW5BUEuw6Yz9ABqMYLuTNbzAFPcBOGiGHwwcNVMvUz4G0kgSYh13wa/7TG3XwTeT4O/A==}
+    dependencies:
+      tabbable: 6.1.1
+    dev: false
+
+  /focus-trap@7.4.0:
+    resolution: {integrity: sha512-yI7FwUqU4TVb+7t6PaQ3spT/42r/KLEi8mtdGoQo2li/kFzmu9URmalTvw7xCCJtSOyhBxscvEAmvjeN9iHARg==}
     dependencies:
       tabbable: 6.1.1
     dev: false

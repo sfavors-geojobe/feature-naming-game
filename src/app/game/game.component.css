@@ -1,0 +1,8 @@
+#gameDiv {
+  display: flex;
+  flex-direction: column;
+}
+
+#featureInput {
+  width: 100%;
+}

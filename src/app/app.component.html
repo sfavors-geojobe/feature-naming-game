@@ -1,3 +1,4 @@
-<div>
-  <app-map basemap="arcgis-streets" [center]="[-97, 35]" [zoom]="3" />
+<div class="app">
+  <app-map [highlightEvent]="highlight" basemap="arcgis-streets" [center]="[-97, 35]" [zoom]="3" />
+  <app-game (highlightEvent)="recieveHighlight($event)" />
 </div>
